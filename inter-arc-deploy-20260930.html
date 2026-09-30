@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <title>INTER ARC — 151 dias</title>
+  <style>
+    :root{
+      --bg:#090909;
+      --panel:#111;
+      --panel2:#171717;
+      --line:#292929;
+      --text:#f5f5f5;
+      --muted:#9b9b9b;
+      --accent:#e7ff52;
+      --accent2:#b9ff66;
+      --danger:#ff6b6b;
+      --warn:#ffd166;
+      --ok:#8cff66;
+      --shadow:0 16px 45px rgba(0,0,0,.38);
+      --radius:20px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 10% -10%, rgba(231,255,82,.08), transparent 26%),
+        radial-gradient(circle at 100% 0%, rgba(140,255,102,.05), transparent 24%),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .app{max-width:1180px;margin:0 auto;padding:18px 16px 110px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:8px 0 20px;position:sticky;top:0;z-index:20;
+      background:linear-gradient(180deg, rgba(9,9,9,.98) 70%, rgba(9,9,9,0));
+      backdrop-filter:blur(8px);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .mark{
+      width:42px;height:42px;border:1px solid #3a3a3a;border-radius:14px;
+      display:grid;place-items:center;font-weight:900;color:var(--accent);
+      background:linear-gradient(145deg,#141414,#0b0b0b);box-shadow:var(--shadow)
+    }
+    .brand h1{font-size:16px;margin:0;letter-spacing:.12em}
+    .brand p{font-size:11px;color:var(--muted);margin:3px 0 0;text-transform:uppercase;letter-spacing:.14em}
+    .ghost{
+      color:var(--text);background:#151515;border:1px solid var(--line);
+      border-radius:12px;padding:10px 12px;
+    }
+    .hero{
+      border:1px solid var(--line);border-radius:28px;padding:22px;
+      background:
+        linear-gradient(145deg, rgba(231,255,82,.06), rgba(255,255,255,.015) 35%, rgba(255,255,255,.01)),
+        #101010;
+      box-shadow:var(--shadow);
+      display:grid;grid-template-columns:1.6fr 1fr;gap:22px;
+    }
+    .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);font-weight:800}
+    .hero h2{font-size:clamp(34px,6vw,70px);line-height:.95;margin:12px 0 14px;letter-spacing:-.045em}
+    .hero h2 span{color:var(--accent)}
+    .hero p{color:#b8b8b8;max-width:680px;line-height:1.55;margin:0}
+    .heroRight{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .stat{
+      min-height:110px;border:1px solid var(--line);border-radius:18px;padding:15px;background:#111;
+      display:flex;flex-direction:column;justify-content:space-between
+    }
+    .stat .label{color:var(--muted);font-size:12px}
+    .stat .value{font-size:28px;font-weight:900;letter-spacing:-.04em}
+    .stat .sub{font-size:11px;color:#777}
+    .progressWrap{margin-top:18px}
+    .progressHead{display:flex;justify-content:space-between;font-size:12px;color:#aaa;margin-bottom:8px}
+    .bar{height:9px;background:#1e1e1e;border-radius:999px;overflow:hidden}
+    .bar > div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.3s}
+    .tabs{display:flex;gap:8px;margin:18px 0;overflow:auto;padding-bottom:2px}
+    .tab{
+      white-space:nowrap;border:1px solid var(--line);background:#111;color:#aaa;border-radius:999px;padding:10px 14px;font-weight:700;font-size:12px
+    }
+    .tab.active{background:var(--accent);border-color:var(--accent);color:#090909}
+    .view{display:none}.view.active{display:block}
+    .grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+    .panel{border:1px solid var(--line);background:#101010;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+    .panel h3{margin:0 0 4px;font-size:16px}
+    .panel .hint{color:var(--muted);font-size:12px;margin:0 0 16px}
+    .dateRow{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .dateNav{display:flex;gap:8px}
+    .dateNav button{width:38px;height:38px;padding:0}
+    .dateTitle{font-size:18px;font-weight:900;letter-spacing:-.02em}
+    .pill{font-size:11px;border:1px solid #363636;border-radius:999px;padding:6px 9px;color:#a8a8a8}
+    .rules{display:grid;gap:10px}
+    .rule{
+      border:1px solid var(--line);border-radius:18px;background:#131313;padding:14px;
+      transition:.2s
+    }
+    .rule.done{border-color:rgba(231,255,82,.55);box-shadow:inset 0 0 0 1px rgba(231,255,82,.08)}
+    .ruleTop{display:flex;align-items:flex-start;gap:12px}
+    .num{
+      min-width:34px;height:34px;border-radius:11px;background:#1d1d1d;color:var(--accent);
+      display:grid;place-items:center;font-weight:900
+    }
+    .ruleText{flex:1}
+    .ruleText strong{display:block;font-size:14px}
+    .ruleText span{display:block;color:#8e8e8e;font-size:11px;line-height:1.4;margin-top:3px}
+    .check{
+      width:24px;height:24px;border-radius:8px;border:1px solid #3a3a3a;background:#161616;display:grid;place-items:center;color:#0a0a0a;font-weight:900;
+      user-select:none
+    }
+    .check.on{background:var(--accent);border-color:var(--accent)}
+    .subfields{display:grid;gap:9px;margin-top:12px;padding-top:12px;border-top:1px solid #242424}
+    .inlineChecks{display:flex;flex-wrap:wrap;gap:8px}
+    .miniCheck{
+      border:1px solid #303030;background:#181818;border-radius:10px;padding:8px 10px;font-size:11px;color:#a8a8a8;
+      display:flex;align-items:center;gap:7px
+    }
+    .miniCheck.on{border-color:rgba(231,255,82,.55);color:#fff}
+    .miniDot{width:9px;height:9px;border:1px solid #555;border-radius:50%}
+    .miniCheck.on .miniDot{background:var(--accent);border-color:var(--accent)}
+    .fieldGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .field label{font-size:10px;color:#747474;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.08em}
+    input,textarea,select{
+      width:100%;background:#0d0d0d;color:#f3f3f3;border:1px solid #2b2b2b;border-radius:11px;padding:10px 11px;outline:none
+    }
+    input:focus,textarea:focus,select:focus{border-color:#666}
+    textarea{resize:vertical;min-height:78px}
+    .save{
+      width:100%;margin-top:14px;border:0;border-radius:14px;padding:14px;font-weight:900;background:var(--accent);color:#0b0b0b
+    }
+    .sideStack{display:grid;gap:16px}
+    .score{
+      display:grid;grid-template-columns:104px 1fr;gap:16px;align-items:center
+    }
+    .ring{
+      --p:0;
+      width:104px;height:104px;border-radius:50%;
+      background:conic-gradient(var(--accent) calc(var(--p)*1%), #202020 0);
+      display:grid;place-items:center;position:relative
+    }
+    .ring::after{content:"";width:78px;height:78px;background:#101010;border-radius:50%;position:absolute}
+    .ring b{z-index:1;font-size:23px}
+    .scoreText strong{font-size:18px}
+    .scoreText p{font-size:12px;color:#878787;line-height:1.5;margin:5px 0 0}
+    .quote{font-size:19px;line-height:1.35;letter-spacing:-.02em;margin:2px 0 14px}
+    .quote span{color:var(--accent)}
+    .smallNote{font-size:11px;color:#777;line-height:1.45}
+    .calendarControls{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+    .calendarControls button{width:38px;height:38px}
+    .monthTitle{font-size:18px;font-weight:900}
+    .week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:6px}
+    .week div{text-align:center;color:#646464;font-size:10px;text-transform:uppercase}
+    .calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+    .day{
+      min-height:75px;border:1px solid #262626;background:#121212;border-radius:13px;padding:8px;
+      display:flex;flex-direction:column;justify-content:space-between
+    }
+    .day.out{opacity:.22}.day.lock{opacity:.35}.day.today{border-color:#777}.day.selected{outline:2px solid var(--accent)}
+    .dayNum{font-size:11px;color:#aaa}
+    .dots{display:flex;gap:2px;flex-wrap:wrap}
+    .dot{width:6px;height:6px;border-radius:50%;background:#2a2a2a}
+    .dot.on{background:var(--accent)}
+    .dayPct{font-size:10px;color:#747474}
+    .historyTable{width:100%;border-collapse:collapse;font-size:12px}
+    .historyTable th,.historyTable td{padding:10px;border-bottom:1px solid #232323;text-align:left}
+    .historyTable th{color:#777;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+    .badge{display:inline-block;padding:4px 7px;border-radius:999px;border:1px solid #303030;color:#aaa;font-size:10px}
+    .badge.good{border-color:rgba(231,255,82,.4);color:var(--accent)}
+    .settingsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .settingCard{border:1px solid var(--line);border-radius:16px;padding:14px;background:#131313}
+    .settingCard h4{margin:0 0 10px;font-size:13px}
+    .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+    .danger{border-color:#542b2b;color:#ff8c8c}
+    .footerNav{
+      display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(11,11,11,.96);
+      border-top:1px solid #242424;padding:8px 12px calc(8px + env(safe-area-inset-bottom));z-index:30;
+      backdrop-filter:blur(12px)
+    }
+    .footerNav button{flex:1;background:none;border:0;color:#777;padding:9px 4px;font-size:10px;font-weight:800}
+    .footerNav button.active{color:var(--accent)}
+    .toast{
+      position:fixed;right:18px;bottom:18px;background:#f3f3f3;color:#111;border-radius:12px;padding:11px 14px;font-size:12px;font-weight:800;
+      opacity:0;transform:translateY(10px);pointer-events:none;transition:.25s;z-index:50
+    }
+    .toast.show{opacity:1;transform:none}
+    @media(max-width:820px){
+      .app{padding:12px 12px 94px}
+      .topbar{position:relative;padding-bottom:14px}
+      .hero{grid-template-columns:1fr;padding:18px;border-radius:22px}
+      .heroRight{grid-template-columns:1fr 1fr}
+      .grid{grid-template-columns:1fr}
+      .tabs{display:none}
+      .footerNav{display:flex}
+      .day{min-height:58px;padding:6px;border-radius:10px}
+      .dayPct{display:none}
+      .settingsGrid{grid-template-columns:1fr}
+    }
+    @media(max-width:430px){
+      .heroRight{grid-template-columns:1fr 1fr}
+      .stat{min-height:92px}
+      .stat .value{font-size:24px}
+      .fieldGrid{grid-template-columns:1fr 1fr}
+      .score{grid-template-columns:90px 1fr}
+      .ring{width:90px;height:90px}.ring::after{width:67px;height:67px}
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark">IA</div>
+      <div><h1>INTER ARC</h1><p>01 OUT 2026 → 28 FEV 2027</p></div>
+    </div>
+    <button class="ghost" onclick="goToday()">Hoje</button>
+  </header>
+
+  <section class="hero">
+    <div>
+      <div class="eyebrow">151 dias de consistência</div>
+      <h2>Construa a versão que<br><span>permanece.</span></h2>
+      <p>O objetivo não é buscar um dia perfeito. É criar um sistema simples o bastante para ser repetido até o fim do ciclo — sono, desapego, corpo, alimentação, mente e foco.</p>
+      <div class="progressWrap">
+        <div class="progressHead"><span>Progresso do ciclo</span><strong id="cycleProgressText">0%</strong></div>
+        <div class="bar"><div id="cycleProgressBar"></div></div>
+      </div>
+    </div>
+    <div class="heroRight">
+      <div class="stat"><span class="label">Dia do ciclo</span><span class="value" id="cycleDay">0/151</span><span class="sub" id="cycleStatus">Começa amanhã</span></div>
+      <div class="stat"><span class="label">Sequência 6/6</span><span class="value" id="streak">0</span><span class="sub">dias consecutivos</span></div>
+      <div class="stat"><span class="label">Dias completos</span><span class="value" id="perfectDays">0</span><span class="sub">todos os 6 pilares</span></div>
+      <div class="stat"><span class="label">Consistência</span><span class="value" id="consistency">0%</span><span class="sub">média dos registros</span></div>
+    </div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" data-view="checkin">Check-in</button>
+    <button class="tab" data-view="calendar">Calendário</button>
+    <button class="tab" data-view="history">Histórico</button>
+    <button class="tab" data-view="settings">Configurações</button>
+  </nav>
+
+  <section id="checkin" class="view active">
+    <div class="grid">
+      <div class="panel">
+        <div class="dateRow">
+          <div>
+            <div class="dateTitle" id="selectedDateTitle"></div>
+            <span class="pill" id="selectedDayIndex"></span>
+          </div>
+          <div class="dateNav">
+            <button class="ghost" onclick="shiftSelected(-1)">‹</button>
+            <button class="ghost" onclick="shiftSelected(1)">›</button>
+          </div>
+        </div>
+
+        <div class="rules">
+          <div class="rule" id="rule1">
+            <div class="ruleTop">
+              <div class="num">1</div>
+              <div class="ruleText"><strong>Mesmo horário para dormir e acordar</strong><span>Consistência de sono acima de improvisação.</span></div>
+              <div class="check" id="r1check">✓</div>
+            </div>
+            <div class="subfields">
+              <div class="inlineChecks">
+                <button class="miniCheck" data-toggle="sleepOnTime"><i class="miniDot"></i>Dormi no horário</button>
+                <button class="miniCheck" data-toggle="wakeOnTime"><i class="miniDot"></i>Acordei no horário</button>
+              </div>
+              <div class="fieldGrid">
+                <div class="field"><label>Hora de dormir</label><input type="time" id="sleepActual"></div>
+                <div class="field"><label>Hora de acordar</label><input type="time" id="wakeActual"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rule" id="rule2">
+            <div class="ruleTop">
+              <div class="num">2</div>
+              <div class="ruleText"><strong>Eliminar apegos</strong><span>Faça uma ação concreta de desapego: objeto, hábito, vínculo, distração ou padrão que não serve ao ciclo.</span></div>
+              <div class="check" id="r2check">✓</div>
+            </div>
+            <div class="subfields">
+              <button class="miniCheck" data-toggle="detachment"><i class="miniDot"></i>Fiz uma ação de desapego hoje</button>
+              <div class="field"><label>O que foi deixado para trás?</label><input id="detachmentNote" placeholder="Ex.: removi um gatilho, doei algo, cortei uma distração..."></div>
+            </div>
+          </div>
+
+          <div class="rule" id="rule3">
+            <div class="ruleTop">
+              <div class="num">3</div>
+              <div class="ruleText"><strong>Treinar de 45 a 60 minutos</strong><span>Registre o treino. Recuperação ativa também pode ser usada quando o corpo pedir.</span></div>
+              <div class="check" id="r3check">✓</div>
+            </div>
+            <div class="subfields">
+              <div class="fieldGrid">
+                <div class="field"><label>Minutos</label><input type="number" min="0" max="240" id="trainingMinutes" placeholder="45"></div>
+                <div class="field"><label>Tipo</label>
+                  <select id="trainingType">
+                    <option value="">Selecione</option>
+                    <option>Musculação</option><option>Cardio</option><option>Mobilidade</option>
+                    <option>Recuperação ativa</option><option>Esporte</option><option>Outro</option>
+                  </select>
+                </div>
+                <div class="field"><label>Peso (opcional)</label><input type="number" step="0.1" id="weight" placeholder="kg"></div>
+                <div class="field"><label>Leitura do corpo</label>
+                  <select id="bodyDirection"><option value="">Sem registro</option><option>Manter</option><option>Ganhar peso</option><option>Perder peso</option></select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rule" id="rule4">
+            <div class="ruleTop">
+              <div class="num">4</div>
+              <div class="ruleText"><strong>Nutrição limpa</strong><span>Sem fast-food e sem escolhas que contradigam o plano do desafio.</span></div>
+              <div class="check" id="r4check">✓</div>
+            </div>
+            <div class="subfields">
+              <button class="miniCheck" data-toggle="cleanNutrition"><i class="miniDot"></i>Nutrição limpa o dia inteiro</button>
+              <div class="field"><label>Observação opcional</label><input id="nutritionNote" placeholder="Ex.: refeições preparadas, hidratação, deslize..."></div>
+            </div>
+          </div>
+
+          <div class="rule" id="rule5">
+            <div class="ruleTop">
+              <div class="num">5</div>
+              <div class="ruleText"><strong>Meditar, ler e desenvolver uma habilidade rentável</strong><span>Os três fazem parte do pilar. A habilidade escolhida fica nas configurações.</span></div>
+              <div class="check" id="r5check">✓</div>
+            </div>
+            <div class="subfields">
+              <div class="inlineChecks">
+                <button class="miniCheck" data-toggle="meditation"><i class="miniDot"></i>Meditei</button>
+                <button class="miniCheck" data-toggle="reading"><i class="miniDot"></i>Li</button>
+                <button class="miniCheck" data-toggle="moneySkill"><i class="miniDot"></i>Trabalhei na habilidade</button>
+              </div>
+              <div class="fieldGrid">
+                <div class="field"><label>Min. meditação</label><input type="number" min="0" id="meditationMinutes" placeholder="10"></div>
+                <div class="field"><label>Páginas lidas</label><input type="number" min="0" id="pagesRead" placeholder="10"></div>
+                <div class="field" style="grid-column:1/-1"><label>Habilidade do ciclo</label><input id="skillToday" placeholder="O que você praticou hoje?"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rule" id="rule6">
+            <div class="ruleTop">
+              <div class="num">6</div>
+              <div class="ruleText"><strong>Diminuir tempo de tela e consumir conteúdo de crescimento</strong><span>Menos rolagem automática. Mais uso intencional.</span></div>
+              <div class="check" id="r6check">✓</div>
+            </div>
+            <div class="subfields">
+              <button class="miniCheck" data-toggle="growthContent"><i class="miniDot"></i>Consumi apenas conteúdo alinhado ao meu crescimento</button>
+              <div class="fieldGrid">
+                <div class="field"><label>Tempo de tela (h)</label><input type="number" min="0" max="24" step="0.1" id="screenHours" placeholder="2.5"></div>
+                <div class="field"><label>Uso não intencional (min)</label><input type="number" min="0" id="wastedScreen" placeholder="0"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:14px">
+          <label>Nota do dia</label>
+          <textarea id="dayNote" placeholder="O que funcionou? O que precisa mudar amanhã?"></textarea>
+        </div>
+        <button class="save" onclick="saveDay()">Salvar check-in</button>
+      </div>
+
+      <div class="sideStack">
+        <div class="panel">
+          <h3>Placar do dia</h3><p class="hint">Cada regra vale 1 ponto.</p>
+          <div class="score">
+            <div class="ring" id="scoreRing"><b id="scoreValue">0/6</b></div>
+            <div class="scoreText"><strong id="scoreLabel">Dia ainda não registrado</strong><p id="scoreDesc">Complete o check-in sem esconder os dias ruins. O histórico serve para corrigir o sistema.</p></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="eyebrow">Princípio do ciclo</div>
+          <p class="quote">“Não dependa de motivação. <span>Construa evidência.</span>”</p>
+          <p class="smallNote">A cada noite, você deixa uma evidência simples de que cumpriu — ou não — o padrão definido.</p>
+        </div>
+        <div class="panel">
+          <h3>Configuração atual</h3><p class="hint">Metas usadas para validar o dia.</p>
+          <div class="smallNote" id="currentTargets"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="calendar" class="view">
+    <div class="panel">
+      <div class="calendarControls">
+        <button class="ghost" onclick="changeMonth(-1)">‹</button>
+        <div class="monthTitle" id="monthTitle"></div>
+        <button class="ghost" onclick="changeMonth(1)">›</button>
+      </div>
+      <div class="week"><div>Dom</div><div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div></div>
+      <div class="calendar" id="calendarGrid"></div>
+    </div>
+  </section>
+
+  <section id="history" class="view">
+    <div class="panel">
+      <h3>Histórico</h3><p class="hint">Registros salvos ao longo do ciclo.</p>
+      <div style="overflow:auto">
+        <table class="historyTable">
+          <thead><tr><th>Data</th><th>Placar</th><th>Treino</th><th>Tela</th><th>Nota</th></tr></thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="settings" class="view">
+    <div class="panel">
+      <h3>Configurações do ciclo</h3><p class="hint">Ajuste metas sem alterar as regras principais.</p>
+      <div class="settingsGrid">
+        <div class="settingCard">
+          <h4>Sono</h4>
+          <div class="fieldGrid">
+            <div class="field"><label>Deitar</label><input type="time" id="setSleep"></div>
+            <div class="field"><label>Acordar</label><input type="time" id="setWake"></div>
+          </div>
+        </div>
+        <div class="settingCard">
+          <h4>Tempo de tela</h4>
+          <div class="field"><label>Meta máxima diária (h)</label><input type="number" min="0" max="24" step="0.5" id="setScreen"></div>
+        </div>
+        <div class="settingCard">
+          <h4>Habilidade rentável</h4>
+          <div class="field"><label>Foco principal</label><input id="setSkill" placeholder="Ex.: vendas, tráfego pago, programação..."></div>
+        </div>
+        <div class="settingCard">
+          <h4>Identidade do ciclo</h4>
+          <div class="field"><label>Compromisso</label><input id="setIdentity" placeholder="Ex.: Eu termino o que começo."></div>
+        </div>
+      </div>
+      <button class="save" onclick="saveSettings()">Salvar configurações</button>
+      <div class="actions">
+        <button class="ghost" onclick="exportBackup()">Exportar backup JSON</button>
+        <button class="ghost" onclick="exportCSV()">Exportar histórico CSV</button>
+        <label class="ghost" style="cursor:pointer">Importar backup<input type="file" accept=".json" onchange="importBackup(event)" hidden></label>
+        <button class="ghost danger" onclick="resetAll()">Apagar todos os dados</button>
+      </div>
+      <p class="smallNote" style="margin-top:14px">Os dados ficam salvos neste navegador. Faça backup periodicamente para não perder o histórico caso limpe os dados do navegador ou troque de aparelho.</p>
+    </div>
+  </section>
+</div>
+
+<nav class="footerNav">
+  <button class="active" data-view="checkin">CHECK-IN</button>
+  <button data-view="calendar">CALENDÁRIO</button>
+  <button data-view="history">HISTÓRICO</button>
+  <button data-view="settings">AJUSTES</button>
+</nav>
+<div class="toast" id="toast">Salvo.</div>
+
+<script>
+const START = new Date(2026,9,1);
+const END = new Date(2027,1,28);
+const TOTAL_DAYS = 151;
+const STORAGE_KEY = "interArc2026_v1";
+
+let db = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || {
+  settings:{sleep:"23:00",wake:"05:30",screen:3,skill:"",identity:""},
+  days:{}
+};
+let selectedDate = clampDate(new Date());
+let calendarDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+
+function dateKey(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,"0"), day=String(d.getDate()).padStart(2,"0");
+  return `${y}-${m}-${day}`;
+}
+function fromKey(k){const [y,m,d]=k.split("-").map(Number);return new Date(y,m-1,d)}
+function clampDate(d){
+  const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  if(x<START) return new Date(START);
+  if(x>END) return new Date(END);
+  return x;
+}
+function dayIndex(d){return Math.floor((new Date(d.getFullYear(),d.getMonth(),d.getDate())-START)/86400000)+1}
+function inCycle(d){return d>=START && d<=END}
+function formatDate(d){
+  return d.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+}
+function getDay(k=dateKey(selectedDate)){
+  return db.days[k] || {
+    sleepOnTime:false,wakeOnTime:false,sleepActual:"",wakeActual:"",
+    detachment:false,detachmentNote:"",
+    trainingMinutes:"",trainingType:"",weight:"",bodyDirection:"",
+    cleanNutrition:false,nutritionNote:"",
+    meditation:false,reading:false,moneySkill:false,meditationMinutes:"",pagesRead:"",skillToday:"",
+    growthContent:false,screenHours:"",wastedScreen:"",
+    dayNote:""
+  };
+}
+function rulesFor(d){
+  const mins=Number(d.trainingMinutes||0);
+  const screen=Number(d.screenHours);
+  return [
+    !!d.sleepOnTime && !!d.wakeOnTime,
+    !!d.detachment,
+    mins>=45 && mins<=60,
+    !!d.cleanNutrition,
+    !!d.meditation && !!d.reading && !!d.moneySkill,
+    !!d.growthContent && d.screenHours!=="" && screen<=Number(db.settings.screen||3)
+  ];
+}
+function score(d){return rulesFor(d).filter(Boolean).length}
+function persist(){localStorage.setItem(STORAGE_KEY,JSON.stringify(db))}
+function toast(msg="Salvo."){
+  const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),1800);
+}
+
+const inputs = [
+  "sleepActual","wakeActual","detachmentNote","trainingMinutes","trainingType","weight","bodyDirection",
+  "nutritionNote","meditationMinutes","pagesRead","skillToday","screenHours","wastedScreen","dayNote"
+];
+function loadSelected(){
+  document.getElementById("selectedDateTitle").textContent = formatDate(selectedDate);
+  document.getElementById("selectedDayIndex").textContent = `Dia ${dayIndex(selectedDate)} de ${TOTAL_DAYS}`;
+  const d=getDay();
+  inputs.forEach(id=>document.getElementById(id).value=d[id]??"");
+  document.querySelectorAll("[data-toggle]").forEach(btn=>{
+    const key=btn.dataset.toggle; btn.classList.toggle("on",!!d[key]);
+    btn.onclick=()=>{d[key]=!d[key]; db.days[dateKey(selectedDate)]=d; refreshRules(d);}
+  });
+  refreshRules(d);
+}
+function refreshRules(d){
+  const r=rulesFor(d);
+  r.forEach((ok,i)=>{
+    document.getElementById(`rule${i+1}`).classList.toggle("done",ok);
+    document.getElementById(`r${i+1}check`).classList.toggle("on",ok);
+  });
+  document.querySelectorAll("[data-toggle]").forEach(btn=>btn.classList.toggle("on",!!d[btn.dataset.toggle]));
+  const s=r.filter(Boolean).length;
+  document.getElementById("scoreValue").textContent=`${s}/6`;
+  document.getElementById("scoreRing").style.setProperty("--p",(s/6)*100);
+  let label="Dia ainda não registrado", desc="Complete o check-in sem esconder os dias ruins. O histórico serve para corrigir o sistema.";
+  if(s===6){label="Dia completo";desc="Todos os seis pilares foram cumpridos."}
+  else if(s>=4){label="Bom nível de consistência";desc="Veja quais pilares ficaram para trás e corrija o sistema amanhã."}
+  else if(s>0){label="Dia parcial";desc="O dado é mais útil do que fingir perfeição. Registre e ajuste."}
+  document.getElementById("scoreLabel").textContent=label;
+  document.getElementById("scoreDesc").textContent=desc;
+  updateTargetCard();
+}
+function captureDay(){
+  const d=getDay();
+  inputs.forEach(id=>d[id]=document.getElementById(id).value);
+  return d;
+}
+function saveDay(){
+  const d=captureDay();
+  db.days[dateKey(selectedDate)]=d;
+  persist(); refreshRules(d); updateDashboard(); renderCalendar(); renderHistory(); toast("Check-in salvo.");
+}
+function shiftSelected(delta){
+  selectedDate=clampDate(new Date(selectedDate.getFullYear(),selectedDate.getMonth(),selectedDate.getDate()+delta));
+  calendarDate=new Date(selectedDate.getFullYear(),selectedDate.getMonth(),1);
+  loadSelected(); renderCalendar();
+}
+function goToday(){
+  selectedDate=clampDate(new Date());
+  calendarDate=new Date(selectedDate.getFullYear(),selectedDate.getMonth(),1);
+  switchView("checkin"); loadSelected(); renderCalendar();
+}
+function updateDashboard(){
+  const now=new Date();
+  let current=now<START?0:now>END?TOTAL_DAYS:dayIndex(now);
+  document.getElementById("cycleDay").textContent=`${current}/${TOTAL_DAYS}`;
+  document.getElementById("cycleStatus").textContent=now<START?"Começa amanhã":now>END?"Ciclo concluído":`${TOTAL_DAYS-current} dias restantes`;
+  const p=Math.max(0,Math.min(100,(current/TOTAL_DAYS)*100));
+  document.getElementById("cycleProgressText").textContent=`${Math.round(p)}%`;
+  document.getElementById("cycleProgressBar").style.width=`${p}%`;
+
+  const keys=Object.keys(db.days).filter(k=>inCycle(fromKey(k))).sort();
+  const scores=keys.map(k=>score(db.days[k]));
+  const perfect=scores.filter(x=>x===6).length;
+  document.getElementById("perfectDays").textContent=perfect;
+  const consistency=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/(scores.length*6)*100):0;
+  document.getElementById("consistency").textContent=`${consistency}%`;
+
+  let streak=0;
+  const today=clampDate(new Date());
+  let cursor=new Date(today);
+  while(cursor>=START){
+    const k=dateKey(cursor);
+    if(db.days[k] && score(db.days[k])===6) streak++;
+    else break;
+    cursor=new Date(cursor.getFullYear(),cursor.getMonth(),cursor.getDate()-1);
+  }
+  document.getElementById("streak").textContent=streak;
+}
+function updateTargetCard(){
+  const s=db.settings;
+  document.getElementById("currentTargets").innerHTML=
+    `Dormir <b>${s.sleep||"—"}</b> · acordar <b>${s.wake||"—"}</b><br>
+     Treino <b>45–60 min</b><br>
+     Tela até <b>${s.screen||"—"} h</b><br>
+     Habilidade: <b>${escapeHtml(s.skill||"não definida")}</b>`;
+}
+function renderCalendar(){
+  const y=calendarDate.getFullYear(), m=calendarDate.getMonth();
+  document.getElementById("monthTitle").textContent=calendarDate.toLocaleDateString("pt-BR",{month:"long",year:"numeric"});
+  const first=new Date(y,m,1), last=new Date(y,m+1,0);
+  const grid=document.getElementById("calendarGrid"); grid.innerHTML="";
+  for(let i=0;i<first.getDay();i++){const e=document.createElement("div");e.className="day out";grid.appendChild(e)}
+  for(let day=1;day<=last.getDate();day++){
+    const d=new Date(y,m,day), k=dateKey(d), entry=db.days[k];
+    const el=document.createElement("button"); el.className="day"; el.type="button";
+    if(!inCycle(d)) el.classList.add("lock");
+    if(dateKey(d)===dateKey(new Date())) el.classList.add("today");
+    if(k===dateKey(selectedDate)) el.classList.add("selected");
+    const sc=entry?score(entry):0;
+    el.innerHTML=`<div class="dayNum">${day}</div>
+      <div class="dots">${[0,1,2,3,4,5].map(i=>`<i class="dot ${entry&&rulesFor(entry)[i]?"on":""}"></i>`).join("")}</div>
+      <div class="dayPct">${entry?Math.round(sc/6*100)+"%":"—"}</div>`;
+    el.onclick=()=>{if(inCycle(d)){selectedDate=d;loadSelected();switchView("checkin");renderCalendar()}};
+    grid.appendChild(el);
+  }
+}
+function changeMonth(delta){
+  const next=new Date(calendarDate.getFullYear(),calendarDate.getMonth()+delta,1);
+  if(next < new Date(START.getFullYear(),START.getMonth(),1) || next > new Date(END.getFullYear(),END.getMonth(),1)) return;
+  calendarDate=next; renderCalendar();
+}
+function renderHistory(){
+  const tbody=document.getElementById("historyBody"); tbody.innerHTML="";
+  const keys=Object.keys(db.days).filter(k=>inCycle(fromKey(k))).sort().reverse();
+  if(!keys.length){tbody.innerHTML=`<tr><td colspan="5" style="color:#666">Nenhum check-in salvo ainda.</td></tr>`;return}
+  keys.forEach(k=>{
+    const d=db.days[k], sc=score(d), tr=document.createElement("tr");
+    tr.innerHTML=`<td>${fromKey(k).toLocaleDateString("pt-BR")}</td>
+      <td><span class="badge ${sc===6?"good":""}">${sc}/6</span></td>
+      <td>${d.trainingMinutes?escapeHtml(d.trainingMinutes)+" min":"—"}</td>
+      <td>${d.screenHours!==""?escapeHtml(d.screenHours)+" h":"—"}</td>
+      <td>${escapeHtml((d.dayNote||"").slice(0,80))||"—"}</td>`;
+    tr.onclick=()=>{selectedDate=fromKey(k);calendarDate=new Date(selectedDate.getFullYear(),selectedDate.getMonth(),1);loadSelected();switchView("checkin")};
+    tbody.appendChild(tr);
+  });
+}
+function loadSettings(){
+  document.getElementById("setSleep").value=db.settings.sleep||"";
+  document.getElementById("setWake").value=db.settings.wake||"";
+  document.getElementById("setScreen").value=db.settings.screen??3;
+  document.getElementById("setSkill").value=db.settings.skill||"";
+  document.getElementById("setIdentity").value=db.settings.identity||"";
+}
+function saveSettings(){
+  db.settings={
+    sleep:document.getElementById("setSleep").value,
+    wake:document.getElementById("setWake").value,
+    screen:Number(document.getElementById("setScreen").value||3),
+    skill:document.getElementById("setSkill").value.trim(),
+    identity:document.getElementById("setIdentity").value.trim()
+  };
+  persist();loadSelected();updateDashboard();renderCalendar();renderHistory();toast("Configurações salvas.");
+}
+function exportBackup(){
+  const blob=new Blob([JSON.stringify(db,null,2)],{type:"application/json"});
+  downloadBlob(blob,`inter-arc-backup-${dateKey(new Date())}.json`);
+}
+function exportCSV(){
+  const header=["data","pontuacao","sono","desapego","treino","nutricao","mente_habilidade","tela","min_treino","peso","horas_tela","nota"];
+  const rows=[header.join(",")];
+  Object.keys(db.days).sort().forEach(k=>{
+    const d=db.days[k], r=rulesFor(d);
+    const vals=[k,score(d),...r.map(x=>x?"sim":"nao"),d.trainingMinutes||"",d.weight||"",d.screenHours||"",d.dayNote||""];
+    rows.push(vals.map(csvEscape).join(","));
+  });
+  downloadBlob(new Blob(["\ufeff"+rows.join("\n")],{type:"text/csv;charset=utf-8"}),`inter-arc-historico-${dateKey(new Date())}.csv`);
+}
+function csvEscape(v){const s=String(v).replaceAll('"','""');return `"${s}"`}
+function downloadBlob(blob,name){
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)
+}
+function importBackup(event){
+  const file=event.target.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{try{const data=JSON.parse(reader.result);if(!data.settings||!data.days)throw new Error();db=data;persist();loadSettings();loadSelected();updateDashboard();renderCalendar();renderHistory();toast("Backup importado.")}catch(e){alert("Arquivo de backup inválido.")}};
+  reader.readAsText(file); event.target.value="";
+}
+function resetAll(){
+  if(confirm("Apagar todos os registros e configurações do Inter Arc neste navegador?")){
+    localStorage.removeItem(STORAGE_KEY); location.reload();
+  }
+}
+function escapeHtml(s){
+  return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+function switchView(id){
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===id));
+  document.querySelectorAll("[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+  if(id==="history")renderHistory();
+  if(id==="settings")loadSettings();
+  if(id==="calendar")renderCalendar();
+}
+document.querySelectorAll("[data-view]").forEach(btn=>btn.addEventListener("click",()=>switchView(btn.dataset.view)));
+inputs.forEach(id=>{
+  const el=document.getElementById(id);
+  el.addEventListener("input",()=>{const d=captureDay();db.days[dateKey(selectedDate)]={...getDay(),...d};refreshRules(db.days[dateKey(selectedDate)])});
+  el.addEventListener("change",()=>{const d=captureDay();db.days[dateKey(selectedDate)]={...getDay(),...d};refreshRules(db.days[dateKey(selectedDate)])});
+});
+
+loadSettings(); loadSelected(); updateDashboard(); renderCalendar(); renderHistory();
+</script>
+</body>
+</html>
